@@ -54,7 +54,7 @@ install -D -m 755 colorgcc     %{buildroot}%{_bindir}/colorgcc
 install -D -m 644 colorgccrc   %{buildroot}%{_sysconfdir}/colorgccrc
 install -D -m 644 colorgcc.sh  %{buildroot}%{_sysconfdir}/profile.d/20colorgcc.sh
 install -D -m 644 colorgcc.csh %{buildroot}%{_sysconfdir}/profile.d/20colorgcc.csh
-# nb: using prefixing colorgcc.sh by "20" so that it is sourced before 80icecream.sh
+# nb: prefixing colorgcc.sh by "20" so that it is sourced before 80icecream.sh
 
 install -d %{buildroot}%{_datadir}/%{name}
 ln -s ../../bin/colorgcc %{buildroot}%{_datadir}/%{name}/colorgcc
