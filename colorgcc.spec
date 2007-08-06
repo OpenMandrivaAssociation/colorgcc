@@ -1,6 +1,6 @@
 %define name colorgcc
 %define version 1.3.2
-%define release %mkrel 3
+%define release %mkrel 4
 
 Summary: GCC output colorizer
 Name: %{name}
