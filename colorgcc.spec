@@ -1,6 +1,6 @@
 %define name colorgcc
 %define version 1.3.2
-%define release %mkrel 1
+%define release %mkrel 2
 
 Summary: GCC output colorizer
 Name: %{name}
@@ -8,6 +8,7 @@ Version: %{version}
 Release: %{release}
 Source0: %{name}-%{version}.tar.bz2
 Patch0: colorgcc-1.3.2-mdkconf.patch
+Patch1: colorgcc-1.3.2-handle-translated-output.patch
 License: GPL
 Group: Development/C
 Url: http://www.schlueters.de/colorgcc.html
@@ -31,6 +32,7 @@ your user only.
 %prep
 %setup -q
 %patch0 -p1 -b .mdkconf
+%patch1 -p1 -b .i18n
 
 cat <<'EOF' > colorgcc.sh
 PATH=%{_datadir}/%{name}:$PATH
