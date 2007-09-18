@@ -1,6 +1,6 @@
 %define name colorgcc
 %define version 1.3.2
-%define release %mkrel 5
+%define release %mkrel 6
 
 Summary: GCC output colorizer
 Name: %{name}
@@ -76,3 +76,6 @@ rm -rf %{buildroot}
 %{_datadir}/colorgcc
 
 %changelog
+* Tue Sep 18 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.2-6mdv2008.0
+- Rebuild
+
