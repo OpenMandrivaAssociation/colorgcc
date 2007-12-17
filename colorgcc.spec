@@ -17,7 +17,6 @@ Obsoletes: gcc2.96-colorgcc
 Obsoletes: gcc-colorgcc <= 4.2.1
 Provides: gcc-colorgcc <= 4.2.1
 BuildArch: noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 ColorGCC is a Perl wrapper to colorize the output of compilers with
