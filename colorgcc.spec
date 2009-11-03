@@ -1,6 +1,6 @@
 %define name colorgcc
 %define version 1.3.2
-%define release %mkrel 9
+%define release %mkrel 10
 
 Summary: GCC output colorizer
 Name: %{name}
@@ -35,13 +35,30 @@ your user only.
 %patch1 -p1 -b .i18n
 
 cat <<'EOF' > colorgcc.sh
-PATH=%{_datadir}/%{name}:$PATH
-export PATH
+case ":${PATH}:" in
+    :: )
+	PATH=%{_datadir}/%{name}
+	export PATH
+    ;;
+    *:%{_datadir}/%{name}:* )
+	: Already set
+    ;;
+    * )
+	PATH=%{_datadir}/%{name}:$PATH
+	export PATH
+    ;;
+esac
 EOF
 
 cat <<'EOF' > colorgcc.csh
 if ( $?PATH ) then
-   setenv PATH %{_datadir}/%{name}:$PATH
+    switch (:${PATH}:)
+	case *":%{_datadir}/%{name}:"* :
+		breaksw
+	default :
+		setenv PATH %{_datadir}/%{name}:$PATH
+		breaksw
+	endsw
 else
    setenv PATH %{_datadir}/%{name}
 endif
