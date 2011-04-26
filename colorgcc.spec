@@ -5,6 +5,7 @@ Release:	12
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		colorgcc-1.3.2-mdkconf.patch
 Patch1:		colorgcc-1.3.2-handle-translated-output.patch
+Patch2:		colorgcc-1.3.2-dont-use-unitialized-env-value.patch
 License:	GPL
 Group:		Development/C
 Url:		http://www.schlueters.de/colorgcc.html
@@ -25,8 +26,9 @@ your user only.
 
 %prep
 %setup -q
-%patch0 -p1 -b .mdkconf
-%patch1 -p1 -b .i18n
+%patch0 -p1 -b .mdkconf~
+%patch1 -p1 -b .i18n~
+%patch2 -p1 -b .undef_home~
 
 cat <<'EOF' > colorgcc.sh
 case ":${PATH}:" in
