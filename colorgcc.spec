@@ -1,23 +1,17 @@
-%define name colorgcc
-%define version 1.3.2
-%define release %mkrel 11
-
-Summary: GCC output colorizer
-Name: %{name}
-Version: %{version}
-Release: %{release}
-Source0: %{name}-%{version}.tar.bz2
-Patch0: colorgcc-1.3.2-mdkconf.patch
-Patch1: colorgcc-1.3.2-handle-translated-output.patch
-License: GPL
-Group: Development/C
-Url: http://www.schlueters.de/colorgcc.html
-Requires: gcc
-Obsoletes: gcc2.96-colorgcc
-Obsoletes: gcc-colorgcc <= 4.2.1
-Provides: gcc-colorgcc <= 4.2.1
-BuildArch: noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Summary:	GCC output colorizer
+Name:		colorgcc
+Version:	1.3.2
+Release:	12
+Source0:	%{name}-%{version}.tar.bz2
+Patch0:		colorgcc-1.3.2-mdkconf.patch
+Patch1:		colorgcc-1.3.2-handle-translated-output.patch
+License:	GPL
+Group:		Development/C
+Url:		http://www.schlueters.de/colorgcc.html
+Requires:	gcc
+Obsoletes:	gcc2.96-colorgcc
+%rename		gcc-colorgcc
+BuildArch:	noarch
 
 %description
 ColorGCC is a Perl wrapper to colorize the output of compilers with
@@ -67,8 +61,6 @@ EOF
 %build
 
 %install
-rm -rf %{buildroot}
-
 install -D -m 755 colorgcc     %{buildroot}%{_bindir}/colorgcc
 install -D -m 644 colorgccrc   %{buildroot}%{_sysconfdir}/colorgccrc
 install -D -m 644 colorgcc.sh  %{buildroot}%{_sysconfdir}/profile.d/20colorgcc.sh
@@ -81,18 +73,9 @@ for i in gcc cc g++ c++ gfortran gcj; do
     ln -s colorgcc %{buildroot}%{_datadir}/%{name}/$i
 done
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %doc COPYING CREDITS ChangeLog
 %config(noreplace) %{_sysconfdir}/colorgccrc
 %{_sysconfdir}/profile.d/*
 %{_bindir}/colorgcc
 %{_datadir}/colorgcc
-
-%changelog
-* Tue Sep 18 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.2-6mdv2008.0
-- Rebuild
-
