@@ -3,9 +3,23 @@ Name:		colorgcc
 Version:	1.3.2
 Release:	12
 Source0:	%{name}-%{version}.tar.bz2
-Patch0:		colorgcc-1.3.2-mdkconf.patch
-Patch1:		colorgcc-1.3.2-handle-translated-output.patch
-Patch2:		colorgcc-1.3.2-dont-use-unitialized-env-value.patch
+#Patch0:		colorgcc-1.3.2-mdkconf.patch
+#Patch1:		colorgcc-1.3.2-handle-translated-output.patch
+#Patch2:		colorgcc-1.3.2-dont-use-unitialized-env-value.patch
+Patch0:		005_old_changes.patch
+Patch1:		01_split_non_quoted.patch
+Patch2:		02_stderr.patch
+Patch3:		03_color_warnings.patch
+Patch4:		04_g++_color.patch
+Patch5:		05_console-colors.patch
+Patch6:		06_use_distcc.patch
+Patch7:		07_invalid_attr.patch
+Patch8:		08_force_color_opt.patch 
+Patch9:		09_color_warnings.patch
+Patch10:	10_utf8_output.patch
+Patch11:	colorgcc-1.3.2-handle-translated-output.patch
+Patch12:	colorgcc-1.3.2-dont-use-unitialized-env-value.patch
+
 License:	GPL
 Group:		Development/C
 Url:		http://www.schlueters.de/colorgcc.html
@@ -26,9 +40,7 @@ your user only.
 
 %prep
 %setup -q
-%patch0 -p1 -b .mdkconf~
-%patch1 -p1 -b .i18n~
-%patch2 -p1 -b .undef_home~
+%apply_patches
 
 cat <<'EOF' > colorgcc.sh
 case ":${PATH}:" in
