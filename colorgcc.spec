@@ -1,11 +1,8 @@
 Summary:	GCC output colorizer
 Name:		colorgcc
 Version:	1.3.2
-Release:	12
+Release:	13
 Source0:	%{name}-%{version}.tar.bz2
-#Patch0:		colorgcc-1.3.2-mdkconf.patch
-#Patch1:		colorgcc-1.3.2-handle-translated-output.patch
-#Patch2:		colorgcc-1.3.2-dont-use-unitialized-env-value.patch
 Patch0:		005_old_changes.patch
 Patch1:		01_split_non_quoted.patch
 Patch2:		02_stderr.patch
