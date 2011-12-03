@@ -1,7 +1,7 @@
 Summary:	GCC output colorizer
 Name:		colorgcc
 Version:	1.3.2
-Release:	13
+Release:	14
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		005_old_changes.patch
 Patch1:		01_split_non_quoted.patch
@@ -16,6 +16,9 @@ Patch9:		09_color_warnings.patch
 Patch10:	10_utf8_output.patch
 Patch11:	colorgcc-1.3.2-handle-translated-output.patch
 Patch12:	colorgcc-1.3.2-dont-use-unitialized-env-value.patch
+# fix so that colorgcc wrapper will work with other wrappers such as ie.
+# icecream, distcc & ccache
+Patch13:	colorgcc-1.3.2-get-gcc-path-properly.patch
 
 License:	GPL
 Group:		Development/C
@@ -74,9 +77,8 @@ EOF
 %install
 install -D -m 755 colorgcc     %{buildroot}%{_bindir}/colorgcc
 install -D -m 644 colorgccrc   %{buildroot}%{_sysconfdir}/colorgccrc
-install -D -m 644 colorgcc.sh  %{buildroot}%{_sysconfdir}/profile.d/20colorgcc.sh
-install -D -m 644 colorgcc.csh %{buildroot}%{_sysconfdir}/profile.d/20colorgcc.csh
-# nb: prefixing colorgcc.sh by "20" so that it is sourced before 80icecream.sh
+install -D -m 644 colorgcc.sh  %{buildroot}%{_sysconfdir}/profile.d/90colorgcc.sh
+install -D -m 644 colorgcc.csh %{buildroot}%{_sysconfdir}/profile.d/90colorgcc.csh
 
 install -d %{buildroot}%{_datadir}/%{name}
 ln -s ../../bin/colorgcc %{buildroot}%{_datadir}/%{name}/colorgcc
