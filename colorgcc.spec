@@ -1,7 +1,7 @@
 Summary:	GCC output colorizer
 Name:		colorgcc
 Version:	1.3.2
-Release:	15
+Release:	16
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		005_old_changes.patch
 Patch1:		01_split_non_quoted.patch
@@ -19,6 +19,9 @@ Patch12:	colorgcc-1.3.2-dont-use-unitialized-env-value.patch
 # fix so that colorgcc wrapper will work with other wrappers such as ie.
 # icecream, distcc & ccache
 Patch13:	colorgcc-1.3.2-get-gcc-path-properly.patch
+# magenta color is easier on the eyes than dark blue, especially when using a
+# dark background
+Patch14:	colorgcc-1.3.2-make-linenumber-magenta-colored.patch
 
 License:	GPL
 Group:		Development/C
