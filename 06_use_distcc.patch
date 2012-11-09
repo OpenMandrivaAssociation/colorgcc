@@ -1,0 +1,30 @@
+Author: <bdefreese@bdubuntu3>
+Description: Allow use of distcc
+--- a/colorgcc
++++ b/colorgcc
+@@ -217,6 +217,9 @@
+ $progName = $1 || $0;
+ 
+ $compiler = $compilerPaths{$progName} || $compilerPaths{"gcc"};
++@comp_list = split /\s+/, $compiler;
++$compiler = $comp_list[0];
++@comp_args = ( @comp_list[1 .. $#comp_list], @ARGV );
+ 
+ # Check that we don't reference self
+ die "$compiler is self-referencing"
+@@ -229,13 +232,13 @@
+ # we're writing to something that's not a tty, don't do color.
+ if (! -t STDOUT || $nocolor{$terminal})
+ {
+-   exec $compiler, @ARGV
++   exec $compiler, @comp_args
+       or die("Couldn't exec");
+ }
+ 
+ # Keep the pid of the compiler process so we can get its return
+ # code and use that as our return code.
+-$compiler_pid = open3('<&STDIN', \*GCCOUT, \*GCCOUT, $compiler, @ARGV);
++$compiler_pid = open3('<&STDIN', \*GCCOUT, \*GCCOUT, $compiler, @comp_args);
+ 
+ # Colorize the output from the compiler.
+ while(<GCCOUT>)

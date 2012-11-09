@@ -1,0 +1,13 @@
+Author: <bdefreese@bddebian1>
+Description: Add an environment variable to force color
+--- a/colorgcc
++++ b/colorgcc
+@@ -235,7 +235,7 @@
+ 
+ # If it's in the list of terminal types not to color, or if
+ # we're writing to something that's not a tty, don't do color.
+-if (! -t STDOUT || $nocolor{$terminal})
++if (! $ENV{"CGCC_FORCE_COLOR"} && (! -t STDOUT || $nocolor{$terminal}))
+ {
+    exec $compiler, @comp_args
+       or die("Couldn't exec");

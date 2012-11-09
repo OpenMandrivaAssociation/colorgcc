@@ -1,0 +1,193 @@
+Author: <bdefreese@bdubuntu3>
+Description: Add patch from console-colors site
+--- a/colorgcc
++++ b/colorgcc
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#! /usr/bin/perl -w
+ 
+ #
+ # colorgcc
+@@ -90,10 +90,17 @@
+ 
+ use Term::ANSIColor;
+ use IPC::Open3;
+-use Cwd 'abs_path';
+ 
+ sub initDefaults
+ {
++   $compilerPaths{"gcc"} = "/usr/bin/gcc";
++   $compilerPaths{"g++"} = "/usr/bin/g++";
++   $compilerPaths{"cc"}  = "/usr/bin/gcc";
++   $compilerPaths{"c++"} = "/usr/bin/g++";
++   $compilerPaths{"g77"} = "/usr/bin/g77";
++   $compilerPaths{"f77"} = "/usr/bin/g77";
++   $compilerPaths{"gcj"} = "/usr/bin/gcj";
++
+    $nocolor{"dumb"} = "true";
+ 
+    $colors{"srcColor"} = color("cyan");
+@@ -119,6 +126,9 @@
+ 
+    open(PREFS, "<$filename") || return;
+ 
++   my $gccVersion;
++   my $overrideCompilerPaths = 0;
++
+    while(<PREFS>)
+    {
+       next if (m/^\#.*/);          # It's a comment.
+@@ -127,9 +137,14 @@
+       $option = $1;
+       $value = $2;
+ 
+-      if ($option =~ m/(.*)(cc|c\+\+|gcc|g\+\+|g77|gobjc|gnat|gcj|gpc)(.*)/)
++      if ($option =~ m/\A(cc|c\+\+|gcc|g\+\+|g77|f77|gcj)\Z/)
+       {
+ 	 $compilerPaths{$option} = $value;
++	 $overrideCompilerPaths  = 1;
++      }
++      elsif ($option eq "gccVersion")
++      {
++         $gccVersion = $value;
+       }
+       elsif ($option eq "nocolor")
+       {
+@@ -150,6 +165,11 @@
+       }
+    }
+    close(PREFS);
++
++   # Append "-<gccVersion>" to user-defined compilerPaths
++   if ($overrideCompilerPaths && $gccVersion) {
++      $compilerPaths{$_} .= "-$gccVersion" foreach (keys %compilerPaths);
++   }
+ }
+ 
+ sub srcscan
+@@ -184,59 +204,23 @@
+ 
+ # Read the configuration file, if there is one.
+ $configFile = $ENV{"HOME"} . "/.colorgccrc";
++$default_configFile = "/etc/colorgccrc";
+ if (-f $configFile)
+ {
+    loadPreferences($configFile);
+-} elsif (-f '/etc/colorgcc/colorgccrc') {
+-   loadPreferences('/etc/colorgcc/colorgccrc');
++} elsif (-f $default_configFile ) {
++   loadPreferences($default_configFile)
+ }
+ 
+ # Figure out which compiler to invoke based on our program name.
+ $0 =~ m%.*/(.*)$%;
+ $progName = $1 || $0;
+ 
+-# See if the user asked for a specific compiler.
+-if ($progName eq "colorgcc") {
+-    $compiler = "/usr/bin/gcc";
+-} elsif (defined($compiler = $compilerPaths{$progName})) {
+-    #Check for unquoted program name with spaces. If there are spaces
+-    #and it's not quoted, assume that the spaces separate the program
+-    #name from some arguments to be prepended to ARGV.
+-    #If it is quoted, remove the quotes.
+-    if ($compiler =~ /^"(.*)"$/) {
+-        $compiler = $1;
+-    } else {
+-        ($compiler, @preargs) = split(/\s+/, $compiler);
+-        @ARGV = (@preargs, @ARGV);
+-    }
+-} else {
+-    # Find our wrapper dir on the PATH and tweak the PATH to remove
+-    # everything up-to and including our wrapper dir.
+-    if ($0 =~ m#(.*)/#) {
+-	# We were called with an explicit path, so trim that off the PATH.
+-	my $find = $1;
+-	$find = abs_path($1) unless $find =~ m#^/#;
+-	$ENV{'PATH'} =~ s#.*(^|:)\Q$find\E(:|$)##;
+-    }
+-    else {
+-	my(@dirs) = split(/:/, $ENV{'PATH'});
+-	while (defined($_ = shift @dirs)) {
+-	    if (-x "$_/$progName") {
+-		$ENV{'PATH'} = join(':', @dirs);
+-		last;
+-	    }
+-	}
+-    }
+-    $compiler = $progName;
+-}
++$compiler = $compilerPaths{$progName} || $compilerPaths{"gcc"};
+ 
+-# Raphael Bossek <bossekr@debian.org> Bug #48451
+-#   We check if the user created a link from the selected compiler
+-#   to colorgcc e.g. /usr/bin/gcc -> /usr/bin/colorgcc !
+-if (-l $compiler and (stat $compiler)[1] == (stat $0)[1]) {
+-    print STDERR "colorgcc: Error; $compiler is a symlink to colorgcc. Aborting.\n";
+-    exit(1);
+-}
++# Check that we don't reference self
++die "$compiler is self-referencing"
++   if ( -l $compiler and (stat $compiler)[1] == (stat $0)[1] );
+ 
+ # Get the terminal type. 
+ $terminal = $ENV{"TERM"} || "dumb";
+@@ -256,7 +240,7 @@
+ # Colorize the output from the compiler.
+ while(<GCCOUT>)
+ {
+-   if (m#^(.+?\.[^:/ ]+):([0-9]+):(.*)$#) # filename:lineno:message
++   if (m/^(.*?):([0-9]+):(.*)$/) # filename:lineno:message
+    {
+       $field1 = $1 || "";
+       $field2 = $2 || "";
+@@ -289,10 +273,6 @@
+       }
+       print("\n");
+    }
+-   elsif (m/^:.+`.*'$/) # filename:message:
+-   {
+-      srcscan($_, $colors{"warningMessageColor"});
+-   }
+    elsif (m/^(.*?):(.+):$/) # filename:message:
+    {
+       # No line number, treat as an "introductory" line of text.
+--- a/colorgccrc
++++ b/colorgccrc
+@@ -20,22 +20,23 @@
+ # For example, srcColor: bold cyan on_yellow
+ #
+ 
+-# Only define the paths to the actual location of the various compilers if
+-# you need to do something weird.  For normal installs, we'll figure out
+-# who to call next automatically.
+-# (Currently, colorgcc only understands these: g++ gcc c++ cc g77 gcj gnat gpc)
+-# g++: /usr/bin/g++
+-# gcc: /usr/bin/gcc
+-# c++: /usr/bin/c++
+-# cc:  /usr/bin/cc
+-# g77: /usr/bin/g77
+-# gcj: /usr/bin/gcj
+-# gnat: /usr/bin/gnat
+-# gpc: /usr/bin/gpc
++# gccVersion: if defined, append "-<gccVersion>" to the compiler paths
++# defined hereunder. Otherwise, those paths remains as is set
++# gccVersion: 4.1.1
++
++# Define the paths to the actual location of the various compilers.
++# (Currently, colorgcc only understands these: g++ gcc c++ cc g77 f77 gcj)
++g++: /usr/bin/g++
++gcc: /usr/bin/gcc
++c++: /usr/bin/g++
++cc:  /usr/bin/gcc
++g77: /usr/bin/g77
++f77: /usr/bin/g77
++gcj: /usr/bin/gcj
+ 
+ # Don't do color if our terminal type ($TERM) is one of these.
+ # (List all terminal types on one line, seperated by whitespace.)
+-nocolor: dumb
++nocolor: dumb emacs
+ 
+ # Text between ` and ' is usually source code.
+ srcColor: bold cyan

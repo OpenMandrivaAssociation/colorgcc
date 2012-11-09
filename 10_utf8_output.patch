@@ -1,0 +1,13 @@
+Author: <bdefreese@debian2.bddebian.com>
+Description: Allow for UTF-8 output.
+--- a/colorgcc
++++ b/colorgcc
+@@ -244,6 +244,8 @@
+ # Keep the pid of the compiler process so we can get its return
+ # code and use that as our return code.
+ $compiler_pid = open3('<&STDIN', \*GCCOUT, \*GCCOUT, $compiler, @comp_args);
++binmode(\*GCCOUT,":bytes");
++binmode(\*STDOUT,":bytes");
+ 
+ # Colorize the output from the compiler.
+ while(<GCCOUT>)

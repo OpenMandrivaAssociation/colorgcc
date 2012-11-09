@@ -1,0 +1,56 @@
+Author: <bdefreese@bdubuntu3>
+Description: Color warnings as well as errors
+--- a/colorgcc
++++ b/colorgcc
+@@ -106,6 +106,9 @@
+    $colors{"errorFileNameColor"} = color("bold red");
+    $colors{"errorNumberColor"}   = color("bold red");
+    $colors{"errorMessageColor"}  = color("bold red");
++
++   @{$translations{"warning"}} = ();
++   @{$translations{"error"}}   = ();
+ }
+ 
+ sub loadPreferences
+@@ -137,6 +140,10 @@
+ 	    $nocolor{$termtype} = "true";
+ 	 }
+       }
++      elsif ($option =~ m/(.+)Translations/)
++      {
++         @{$translations{$1}} = split(/\s+/, $value);
++      }
+       else
+       {
+ 	 $colors{$option} = color($value);
+@@ -255,7 +262,18 @@
+       $field2 = $2 || "";
+       $field3 = $3 || "";
+ 
+-      if ($field3 =~ m/\s+warning:.*/)
++      # See if this is a warning message.
++      $is_warning = 0;
++      for $translation ("warning", @{$translations{"warning"}})
++      {
++         if ($field3 =~ m/\s+$translation:.*/)
++         {
++            $is_warning = 1;
++            last;
++         }
++      }
++
++      if ($is_warning)
+       {
+ 	 # Warning
+ 	 print($colors{"warningFileNameColor"}, "$field1:", color("reset"));
+--- a/colorgccrc
++++ b/colorgccrc
+@@ -56,3 +56,8 @@
+ errorFileNameColor: reset
+ errorNumberColor:   blue
+ errorMessageColor:  bold red
++
++# Possible translations, if you use localized compiler.
++# (List all translations on one line, seperated by whitespace.)
++warningTranslations:
++errorTranslations:

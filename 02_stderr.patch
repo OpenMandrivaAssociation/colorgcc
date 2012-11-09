@@ -1,0 +1,13 @@
+Author: <bdefreese@bdubuntu3>
+Description: Print to STDERR
+--- a/colorgcc
++++ b/colorgcc
+@@ -227,7 +227,7 @@
+ #   We check if the user created a link from the selected compiler
+ #   to colorgcc e.g. /usr/bin/gcc -> /usr/bin/colorgcc !
+ if (-l $compiler and (stat $compiler)[1] == (stat $0)[1]) {
+-    print "colorgcc: Error; $compiler is a symlink to colorgcc. Aborting.\n";
++    print STDERR "colorgcc: Error; $compiler is a symlink to colorgcc. Aborting.\n";
+     exit(1);
+ }
+ 

@@ -1,0 +1,21 @@
+Author: <bdefreese@bdubuntu3>
+Description: Color invalid attributes
+--- a/colorgcc
++++ b/colorgcc
+@@ -159,10 +159,15 @@
+       {
+          @{$translations{$1}} = split(/\s+/, $value);
+       }
+-      else
++      elsif ($option =~ m/Color$/)
+       {
+ 	 $colors{$option} = color($value);
+       }
++      else
++      {
++         # treat unknown options as user defined compilers
++         $compilerPaths{$option} = $value;
++      }
+    }
+    close(PREFS);
+ 

@@ -1,0 +1,29 @@
+--- colorgcc-1.3.2/colorgcc.path~	2011-12-03 06:45:40.229845956 +0100
++++ colorgcc-1.3.2/colorgcc	2011-12-03 06:46:23.125893322 +0100
+@@ -90,16 +90,18 @@
+ 
+ use Term::ANSIColor;
+ use IPC::Open3;
+-
++use File::Basename;
+ sub initDefaults
+ {
+-   $compilerPaths{"gcc"} = "/usr/bin/gcc";
+-   $compilerPaths{"g++"} = "/usr/bin/g++";
+-   $compilerPaths{"cc"}  = "/usr/bin/gcc";
+-   $compilerPaths{"c++"} = "/usr/bin/g++";
+-   $compilerPaths{"g77"} = "/usr/bin/g77";
+-   $compilerPaths{"f77"} = "/usr/bin/g77";
+-   $compilerPaths{"gcj"} = "/usr/bin/gcj";
++   $path = dirname($0);
++   $ENV{"PATH"} =~ s/$path://i; $ENV{"PATH"} =~ s/:$path//i;
++   $compilerPaths{"gcc"} = `which gcc 2> /dev/null`;
++   $compilerPaths{"g++"} = `which g++ 2> /dev/null`;
++   $compilerPaths{"cc"}  = `which gcc 2> /dev/null`;
++   $compilerPaths{"c++"} = `which g++ 2> /dev/null`;
++   $compilerPaths{"g77"} = `which g77 2> /dev/null`;
++   $compilerPaths{"f77"} = `which g77 2> /dev/null`;
++   $compilerPaths{"gcj"} = `which gcj 2> /dev/null`;
+ 
+    $nocolor{"dumb"} = "true";
+ 

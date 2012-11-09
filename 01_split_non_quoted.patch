@@ -1,0 +1,24 @@
+Author: <bdefreese@bdubuntu3>
+Description: Split non-quoted program names
+--- a/colorgcc
++++ b/colorgcc
+@@ -191,7 +191,18 @@
+ # See if the user asked for a specific compiler.
+ if ($progName eq "colorgcc") {
+     $compiler = "/usr/bin/gcc";
+-} elsif (!defined($compiler = $compilerPaths{$progName})) {
++} elsif (defined($compiler = $compilerPaths{$progName})) {
++    #Check for unquoted program name with spaces. If there are spaces
++    #and it's not quoted, assume that the spaces separate the program
++    #name from some arguments to be prepended to ARGV.
++    #If it is quoted, remove the quotes.
++    if ($compiler =~ /^"(.*)"$/) {
++        $compiler = $1;
++    } else {
++        ($compiler, @preargs) = split(/\s+/, $compiler);
++        @ARGV = (@preargs, @ARGV);
++    }
++} else {
+     # Find our wrapper dir on the PATH and tweak the PATH to remove
+     # everything up-to and including our wrapper dir.
+     if ($0 =~ m#(.*)/#) {

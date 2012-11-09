@@ -1,0 +1,11 @@
+--- colorgcc-1.3.2/colorgcc.0012~	2011-07-14 07:15:32.998785943 +0200
++++ colorgcc-1.3.2/colorgcc	2011-07-14 07:15:36.598839917 +0200
+@@ -208,7 +208,7 @@ sub srcscan
+ initDefaults();
+ 
+ # Read the configuration file, if there is one.
+-$configFile = $ENV{"HOME"} . "/.colorgccrc";
++$configFile = exists($ENV{"HOME"}) ? $ENV{HOME} . "/.colorgccrc" : "";
+ $default_configFile = "/etc/colorgccrc";
+ if (-f $configFile)
+ {

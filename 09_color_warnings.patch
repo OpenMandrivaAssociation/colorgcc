@@ -1,0 +1,41 @@
+Author: <bdefreese@bddebian1>
+Description: Color <warning> warnings
+--- a/colorgcc
++++ b/colorgcc
+@@ -281,6 +281,36 @@
+       }
+       print("\n");
+    }
++   elsif (m/^(<command-line>):(.*)$/) # special-location:message
++   {
++      $field1 = $1 || "";
++      $field2 = $2 || "";
++
++      # See if this is a warning message.
++      $is_warning = 0;
++      for $translation ("warning", @{$translations{"warning"}})
++      {
++         if ($field2 =~ m/\s+$translation:.*/)
++         {
++            $is_warning = 1;
++            last;
++         }
++      }
++
++      if ($is_warning)
++      {
++	 # Warning
++	 print($colors{"warningFileNameColor"}, "$field1:", color("reset"));
++	 srcscan($field2, $colors{"warningMessageColor"});
++      }
++      else
++      {
++	 # Error
++	 print($colors{"errorFileNameColor"}, "$field1:", color("reset"));
++	 srcscan($field2, $colors{"errorMessageColor"});
++      }
++      print("\n");
++   }
+    elsif (m/^(.*?):(.+):$/) # filename:message:
+    {
+       # No line number, treat as an "introductory" line of text.
