@@ -95,3 +95,78 @@ done
 %{_sysconfdir}/profile.d/*
 %{_bindir}/colorgcc
 %{_datadir}/colorgcc
+
+
+%changelog
+* Thu May 24 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.3.2-16
++ Revision: 800353
+- make line number magenta colored to make it easier on the eyes to read (P14)
+
+* Wed Mar 07 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.3.2-15
++ Revision: 782794
+- fix current working directory being added to $PATH in colorgcc
+- load colorgccrc from the correct path
+
+* Sat Dec 03 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.3.2-14
++ Revision: 737399
+- fix so that colorgcc wrapper should be working in combination with other gcc
+  wrappers as well (P13)
+
+* Thu Jul 14 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.3.2-13
++ Revision: 689959
+- merge debian patches
+
+* Tue Apr 26 2011 Per Øyvind Karlsen <peroyvind@mandriva.org> 1.3.2-12
++ Revision: 659385
+- fix warnings when $HOME for some reason isn't defined
+- cleanups
+
+* Sun Dec 05 2010 Oden Eriksson <oeriksson@mandriva.com> 1.3.2-11mdv2011.0
++ Revision: 610152
+- rebuild
+
+* Tue Nov 03 2009 Andrey Borzenkov <arvidjaar@mandriva.org> 1.3.2-10mdv2010.1
++ Revision: 460412
+- do not duplicate PATH entry on recursive shell invocation
+
+* Wed Sep 02 2009 Thierry Vignaud <tv@mandriva.org> 1.3.2-9mdv2010.0
++ Revision: 424937
+- rebuild
+
+* Wed Jul 23 2008 Thierry Vignaud <tv@mandriva.org> 1.3.2-8mdv2009.0
++ Revision: 243606
+- rebuild
+
+* Fri Dec 21 2007 Olivier Blin <blino@mandriva.org> 1.3.2-6mdv2008.1
++ Revision: 136330
+- restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Tue Sep 18 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.2-6mdv2008.0
++ Revision: 89587
+- rebuild
+
+* Mon Aug 06 2007 Pixel <pixel@mandriva.com> 1.3.2-5mdv2008.0
++ Revision: 59559
+- rebuild for build system test
+
+* Mon Aug 06 2007 Pixel <pixel@mandriva.com> 1.3.2-4mdv2008.0
++ Revision: 59553
+- rebuild for build system test
+
+* Mon Aug 06 2007 Pixel <pixel@mandriva.com> 1.3.2-3mdv2008.0
++ Revision: 59543
+- rebuild for build system test
+
+* Mon Aug 06 2007 Pixel <pixel@mandriva.com> 1.3.2-2mdv2008.0
++ Revision: 59484
+- fix parsing warnings as warnings when messages are translated (#32282)
+
+* Wed Jul 11 2007 Pixel <pixel@mandriva.com> 1.3.2-1mdv2008.0
++ Revision: 51263
+- standalone package which replaces gcc-colorgcc
+- uses its own path to be independant of installed gcc
+- Create colorgcc
+
