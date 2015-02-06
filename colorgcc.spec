@@ -1,7 +1,7 @@
 Summary:	GCC output colorizer
 Name:		colorgcc
 Version:	1.3.2
-Release:	16
+Release:	17
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		005_old_changes.patch
 Patch1:		01_split_non_quoted.patch
