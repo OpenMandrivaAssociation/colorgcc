@@ -43,7 +43,7 @@ your user only.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 cat <<'EOF' > colorgcc.sh
 case ":${PATH}:" in
