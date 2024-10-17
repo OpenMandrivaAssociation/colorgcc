@@ -25,7 +25,7 @@ Patch14:	colorgcc-1.3.2-make-linenumber-magenta-colored.patch
 
 License:	GPL
 Group:		Development/C
-Url:		http://www.schlueters.de/colorgcc.html
+Url:		https://www.schlueters.de/colorgcc.html
 Requires:	gcc
 Obsoletes:	gcc2.96-colorgcc
 %rename		gcc-colorgcc
